@@ -4,16 +4,20 @@ public class Waiter extends Thread {
 
     private static int waiters;
 
-    private Burger burger = new Burger();
+    private Burger burger;
 
+    public Waiter(Burger burger) {
+        this.burger = burger;
+    }
 
     @Override
     public void run() {
 
         waiters++;
-        System.out.println(waiters);
 
         while (true) {
+
+            System.out.println("um");
 
             synchronized (burger) {
                 while (burger.getAmount() > 0) {
@@ -25,10 +29,11 @@ public class Waiter extends Thread {
                     }
                     burger.takeBurger();
                     System.out.println(toString());
-                    burger.notifyAll();
+//                    burger.notifyAll();
                 }
 
             }
+
         }
 
     }
