@@ -11,9 +11,9 @@ public class Burger {
         return new Random().nextInt(5) + 2;
     }
 
-    public synchronized void makeBurger(){amount++;}
+    public void makeBurger(){amount++;}
 
-    public synchronized void takeBurger(){amount--;}
+    public void takeBurger(){amount--;}
 
     public synchronized int getAmount() {return amount;}
 }

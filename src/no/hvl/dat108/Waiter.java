@@ -8,30 +8,26 @@ public class Waiter extends Thread {
 
 
     @Override
-    public synchronized void run() {
+    public void run() {
 
         waiters++;
         System.out.println(waiters);
 
         while (true) {
 
-            if (burger.getAmount() < 1) {
-                try {
-                    System.out.println(errorMessage());
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    Thread.sleep((burger.randomNumber()) * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                burger.takeBurger();
-                System.out.println(toString());
+            synchronized (burger) {
+                while (burger.getAmount() > 0) {
 
-                if (burger.getAmount() == 4) { notify(); }
+                    try {
+                        Thread.sleep((burger.randomNumber()) * 1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    burger.takeBurger();
+                    System.out.println(toString());
+                    burger.notifyAll();
+                }
+
             }
         }
 
@@ -49,7 +45,7 @@ public class Waiter extends Thread {
                 "]";
     }
 
-    public String errorMessage() {
+    public String problem() {
         return "### Waiter" + waiters + " is ready to serve, but there is no burger :( ###";
     }
 }
